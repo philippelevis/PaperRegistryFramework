@@ -1,6 +1,6 @@
-package net.Vivelle.randomPaperFramework.loottables;
+package net.Vivelle.paperRegistryFramework.loottables;
 
-import net.Vivelle.randomPaperFramework.RandomPaperFramework;
+import net.Vivelle.paperRegistryFramework.PaperRegistryFramework;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +46,7 @@ public class LootTableRegistry {
     }
 
     public void loadLootTableFromJson(String name, String json) {
-        RandomPaperFramework.getInstance().getLogger().log(Level.WARNING,json);
+        PaperRegistryFramework.getInstance().getLogger().log(Level.WARNING,json);
         LootTable lootTable = new LootTable();
         lootTable.loadFromJson(json);
         registerLootTable(name, lootTable);

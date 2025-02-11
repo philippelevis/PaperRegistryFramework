@@ -1,4 +1,4 @@
-package net.Vivelle.randomPaperFramework.loottables;
+package net.Vivelle.paperRegistryFramework.loottables;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.Vivelle.randomPaperFramework.loottables.LootTable.*;
+import net.Vivelle.paperRegistryFramework.loottables.LootTable.*;
 
 public class SingleLootTable {
 

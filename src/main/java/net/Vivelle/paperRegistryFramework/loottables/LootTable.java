@@ -1,10 +1,10 @@
-package net.Vivelle.randomPaperFramework.loottables;
+package net.Vivelle.paperRegistryFramework.loottables;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.Vivelle.randomPaperFramework.RandomPaperFramework;
+import net.Vivelle.paperRegistryFramework.PaperRegistryFramework;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +62,7 @@ public class LootTable {
             for (LootItem item : lootItems) {
                 cumulativeWeight += item.weight;
                 if (randomValue < cumulativeWeight) {
-                    RandomPaperFramework.getInstance().getLogger().info(item.name+"; "+i);
+                    PaperRegistryFramework.getInstance().getLogger().info(item.name+"; "+i);
                     selectedLoot.add(item.name); // Add the selected item to the list
                     break; // Exit the inner loop once an item is selected
                 }

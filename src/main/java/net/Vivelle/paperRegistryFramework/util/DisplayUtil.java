@@ -1,4 +1,4 @@
-package net.Vivelle.randomPaperFramework.util;
+package net.Vivelle.paperRegistryFramework.util;
 
 import org.bukkit.util.Transformation;
 import org.joml.*;

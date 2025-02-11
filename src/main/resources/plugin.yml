@@ -1,6 +1,6 @@
 name: paper-registry-framework
 version: '0.1-first-release'
-main: net.Vivelle.randomPaperFramework.RandomPaperFramework
+main: net.Vivelle.paperRegistryFramework.PaperRegistryFramework
 api-version: '1.21'
 authors: [ Vivelle, DrDeffGoodwin ]
 description: Nerdology teams very own vfx mod based around lodestone, datapack support included! :3

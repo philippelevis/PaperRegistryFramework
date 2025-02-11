@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'net.Vivelle'
-version = '0.1-first-release'
+version = '0.2'
 
 repositories {
     mavenCentral()
@@ -45,5 +45,25 @@ processResources {
     filteringCharset 'UTF-8'
     filesMatching('plugin.yml') {
         expand props
+    }
+}
+
+tasks.build.doLast {
+    // Define the source and destination directories
+    def buildDir = "C:/Users/Vivelle__/MCreatorWorkspaces/paper-registry-framework/build/libs"
+    project.logger.log(LogLevel.ERROR, buildDir)
+    def targetDir1 = file("D:/New Folder (2)/plugins") // Change to your first target directory
+    def targetDir2 = file("$buildDir/../../../dev-dank-horse/libs") // Change to your second target directory
+
+    // Copy the built artifacts to the target directories
+    copy {
+        from buildDir
+        into targetDir1
+        include '*.jar' // Adjust this to match your output files
+    }
+    copy {
+        from buildDir
+        into targetDir2
+        include '*.jar' // Adjust this to match your output files
     }
 }
