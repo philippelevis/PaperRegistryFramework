@@ -4,6 +4,7 @@ import net.Vivelle.paperRegistryFramework.PaperRegistryFramework;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,7 +22,11 @@ import java.util.*;
 import static net.Vivelle.paperRegistryFramework.items.PaperItemManager.ID_KEY;
 import static net.Vivelle.paperRegistryFramework.items.PaperItemManager.UUID_KEY;
 
-
+/**Current implementation produces a memory leak of ~100 bytes per forgotten item.
+ * <p>the leak is likely unremovable however mitigatable: keep track of all temporary items (e.g. when crafting, if you're using PaperShapedRecipe its already done)
+ * </p>
+ * in general just be careful :3
+ **/
 public class PaperItem implements Listener {
     protected static Material DEFAULT_MAT = Material.DIAMOND;
     protected static int DEFAULT_AMOUNT = 1;
@@ -35,8 +40,6 @@ public class PaperItem implements Listener {
         this(DEFAULT_MAT,DEFAULT_AMOUNT,DEFAULT_DURA,name);
     }
 
-
-
     public PaperItem(Material fake, int amount, int maxdurability,NamespacedKey name){
         this.itemStack = new ItemStack(fake);
         this.uuid = UUID.randomUUID();
@@ -44,10 +47,17 @@ public class PaperItem implements Listener {
         itemStack.editMeta(meta -> {
             PersistentDataContainer pdc = meta.getPersistentDataContainer();
             pdc.set(UUID_KEY, PersistentDataType.STRING, this.uuid.toString());
-            pdc.set(ID_KEY, PersistentDataType.STRING, name.value());
+            pdc.set(ID_KEY, PersistentDataType.STRING, name.toString());
         });
         this.maxdurability = maxdurability;
         PaperItemManager.createItem(this);
+    }
+    /**A constructor for loading an instance of PaperItem from an itemStack. Do it quick :3**/
+    public PaperItem(ItemStack load){
+        PersistentDataContainer pdc = load.getItemMeta().getPersistentDataContainer();
+        this.itemStack = load;
+        this.uuid=UUID.fromString(pdc.get(UUID_KEY,PersistentDataType.STRING));
+        this.maxdurability = load.getDurability();
     }
 
     public UUID getUUID(){
@@ -116,7 +126,7 @@ public class PaperItem implements Listener {
      * <p>
      * If not overriden, does not tick, checks for being overriden with {@link Method#equals(Object)}
      */
-    public void onTick(){
+    public void onTick(Entity entity){
 
     }
 
@@ -135,12 +145,13 @@ public class PaperItem implements Listener {
             this.remove();
             return false;
         }
-        PaperRegistryFramework.getInstance().getLogger().info(item.getItemMeta().getPersistentDataContainer().getOrDefault(UUID_KEY, PersistentDataType.STRING,"none"));
+        //PaperRegistryFramework.getInstance().getLogger().info(item.getItemMeta().getPersistentDataContainer().getOrDefault(UUID_KEY, PersistentDataType.STRING,"none"));
         return this.itemStack == item || UUID.fromString(item.getItemMeta().getPersistentDataContainer().getOrDefault(UUID_KEY, PersistentDataType.STRING,"")).equals(uuid);
     }
 
     /**removal method. use when you want to untie a PaperItem from an ItemStack. To remove an item fully use {@link #removeFully()}**/
     public void remove(){
+        PaperRegistryFramework.getInstance().getLogger().info("removing self");
         PaperItemManager.removeItem(this);
     }
 

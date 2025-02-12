@@ -1,12 +1,11 @@
 package net.Vivelle.paperRegistryFramework;
 
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
-import net.Vivelle.paperRegistryFramework.handlers.EntityDeathListener;
-import net.Vivelle.paperRegistryFramework.handlers.PlayerJoinListener;
-import net.Vivelle.paperRegistryFramework.handlers.PlayerLeaveListener;
-import net.Vivelle.paperRegistryFramework.handlers.PrepareCraftListener;
+import net.Vivelle.paperRegistryFramework.handlers.*;
 import net.Vivelle.paperRegistryFramework.items.PaperItem;
 import net.Vivelle.paperRegistryFramework.items.PaperItemManager;
+import net.Vivelle.paperRegistryFramework.items.TestItem;
+import net.Vivelle.paperRegistryFramework.items.TickItemsEffect;
 import net.Vivelle.paperRegistryFramework.loottables.LootTableRegistry;
 import net.Vivelle.paperRegistryFramework.util.MyEntityEffect;
 import net.Vivelle.paperRegistryFramework.util.MyTickable;
@@ -51,6 +50,7 @@ public final class PaperRegistryFramework extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerLeaveListener(), this);
         getServer().getPluginManager().registerEvents(new EntityDeathListener(), this);
         getServer().getPluginManager().registerEvents(new PrepareCraftListener(),this);
+        getServer().getPluginManager().registerEvents(new PaperItemMgrHelper(),this);
         BukkitScheduler ticker = getServer().getScheduler();
 
         lootTableRegistry = new LootTableRegistry();
@@ -72,6 +72,8 @@ public final class PaperRegistryFramework extends JavaPlugin {
         createLootTableDirectory();
         loadLootTables();
         PaperItemManager.init();
+        PaperItemManager.registerItem(new NamespacedKey(this,"test"), TestItem.class);
+        TickItemsEffect.reg("tickItems");
     }
 
     public static void killEffects(Entity entity){
@@ -118,7 +120,7 @@ public final class PaperRegistryFramework extends JavaPlugin {
     }
 
     public static void ApplyEffect(Class<? extends MyEntityEffect> effect, Player plr) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-            effect.getDeclaredConstructor(int.class, Player.class).newInstance(20*60, plr);
+            effect.getDeclaredConstructor(int.class, Entity.class).newInstance(20*60, plr);
     }
 
 

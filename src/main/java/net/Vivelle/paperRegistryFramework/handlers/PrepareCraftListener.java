@@ -1,6 +1,8 @@
 package net.Vivelle.paperRegistryFramework.handlers;
 
 import net.Vivelle.paperRegistryFramework.PaperRegistryFramework;
+import net.Vivelle.paperRegistryFramework.items.PaperItem;
+import net.Vivelle.paperRegistryFramework.items.PaperItemManager;
 import net.Vivelle.paperRegistryFramework.recipes.PaperShapedRecipe;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -18,20 +20,25 @@ import java.util.*;
 
 public class PrepareCraftListener implements Listener {
     private final Map<Location, PaperShapedRecipe> recentRecipes = new HashMap<>();
+    private final Map<Location, PaperItem> recentItems = new HashMap<>();
 
-    private PaperShapedRecipe test = new PaperShapedRecipe(
+    private final PaperShapedRecipe test = new PaperShapedRecipe(
             List.of(new PaperShapedRecipe.Pair[]{
                     new PaperShapedRecipe.Pair(NamespacedKey.minecraft("iron_bars"), 3)
-            }),NamespacedKey.minecraft("dragon_egg")
+            }),new NamespacedKey(PaperRegistryFramework.getInstance(),"test")
     );
+
     @EventHandler
     public void CustomRecipeThing(PrepareItemCraftEvent event){
         if(event.getRecipe() == null){
             if(test.matches(event.getInventory().getMatrix())){
+                if (recentItems.get(event.getInventory().getLocation())!=null)recentItems.get(event.getInventory().getLocation()).remove();
                 recentRecipes.put(event.getInventory().getLocation(),test);
-                event.getInventory().setResult(test.getResultStack());
+                ItemStack stack = test.getResultStack();
+                event.getInventory().setResult(stack);
+                recentItems.put(event.getInventory().getLocation(), PaperItemManager.getItem(stack));
             }
-            PaperRegistryFramework.getInstance().getLogger().info("preparing"+event.getInventory().getResult());
+            //PaperRegistryFramework.getInstance().getLogger().info("preparing"+event.getInventory().getResult());
         }
 
     }
@@ -40,6 +47,7 @@ public class PrepareCraftListener implements Listener {
         if(event.getInventory() instanceof CraftingInventory && event.getSlotType() == InventoryType.SlotType.RESULT) {
             PaperRegistryFramework.getInstance().getLogger().info("crafted" + event.getCurrentItem());
             PaperShapedRecipe recipe = recentRecipes.get(event.getInventory().getLocation());
+            recentItems.remove(event.getInventory().getLocation());
             ItemStack[] lst = ((CraftingInventory) event.getInventory()).getMatrix();
             if (recipe != null) {
                 for (int i = 0; i < lst.length; i++) {
