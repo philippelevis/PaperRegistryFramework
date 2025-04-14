@@ -1,23 +1,20 @@
 package net.Vivelle.paperRegistryFramework;
 
-import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.Vivelle.paperRegistryFramework.handlers.*;
-import net.Vivelle.paperRegistryFramework.items.PaperItem;
 import net.Vivelle.paperRegistryFramework.items.PaperItemManager;
-import net.Vivelle.paperRegistryFramework.items.TestItem;
 import net.Vivelle.paperRegistryFramework.items.TickItemsEffect;
 import net.Vivelle.paperRegistryFramework.loottables.LootTableRegistry;
+import net.Vivelle.paperRegistryFramework.recipes.RecipeLoader;
+import net.Vivelle.paperRegistryFramework.recipes.RecipeRegistry;
 import net.Vivelle.paperRegistryFramework.util.MyEntityEffect;
 import net.Vivelle.paperRegistryFramework.util.MyTickable;
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.BlockDisplay;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,7 +69,8 @@ public final class PaperRegistryFramework extends JavaPlugin {
         createLootTableDirectory();
         loadLootTables();
         PaperItemManager.init();
-        PaperItemManager.registerItem(new NamespacedKey(this,"test"), TestItem.class);
+        createRecipeDir();
+        loadRecipes();
         TickItemsEffect.reg("tickItems");
     }
 
@@ -178,6 +176,21 @@ public final class PaperRegistryFramework extends JavaPlugin {
             }
         });
         lock.unlock();
+    }
+
+    private void createRecipeDir(){
+        File lootTableDir = new File(getDataFolder(), "recipes");
+        if (!lootTableDir.exists()) {
+            lootTableDir.mkdirs(); // Create the directory if it doesn't exist
+        }
+    }
+
+    private void loadRecipes() {
+        File lootTableDir = new File(getDataFolder(), "recipes");
+        File[] files = lootTableDir.listFiles((dir, name) -> name.endsWith(".json"));
+        for (File file : files) {
+            RecipeLoader.loadRecipes(file.getPath());
+        }
     }
 
     private void createLootTableDirectory() {

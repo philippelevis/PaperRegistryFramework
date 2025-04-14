@@ -31,18 +31,18 @@ public class PaperItemMgrHelper implements Listener {
         if (event.getEntity() instanceof Item item){
             if(item.getItemStack().getItemMeta() != null) {
                 PersistentDataContainer pdc = item.getItemStack().getItemMeta().getPersistentDataContainer();
-                if (pdc != null && (pdc.get(ID_KEY, PersistentDataType.STRING) != null && PaperItemManager.getItemById(pdc.get(UUID_KEY, PersistentDataType.STRING)) != null)) {
-                    PaperItemManager.getItemById(pdc.get(UUID_KEY, PersistentDataType.STRING)).remove();
+                if (pdc != null && (pdc.get(ID_KEY, PersistentDataType.STRING) != null && PaperItemManager.getItem(pdc.get(UUID_KEY, PersistentDataType.STRING)) != null)) {
+                    PaperItemManager.getItem(pdc.get(UUID_KEY, PersistentDataType.STRING)).remove();
                 }
             }
         }
     }
     @EventHandler
     public void onEntityRemove(EntityRemoveFromWorldEvent event){
-        if (event.getEntity() instanceof Item item){
+        if (event.getEntity() instanceof Item item && item.getItemStack().getItemMeta() != null){
             PersistentDataContainer pdc = item.getItemStack().getItemMeta().getPersistentDataContainer();
-            if(pdc.get(ID_KEY, PersistentDataType.STRING) != null && PaperItemManager.getItemById(pdc.get(UUID_KEY,PersistentDataType.STRING))!=null){
-                PaperItemManager.getItemById(pdc.get(UUID_KEY,PersistentDataType.STRING)).remove();
+            if(pdc.get(ID_KEY, PersistentDataType.STRING) != null && PaperItemManager.getItem(pdc.get(UUID_KEY,PersistentDataType.STRING))!=null){
+                PaperItemManager.getItem(pdc.get(UUID_KEY,PersistentDataType.STRING)).remove();
             }
         }
     }
@@ -52,8 +52,8 @@ public class PaperItemMgrHelper implements Listener {
         for (ItemStack stack : inv) {
             if (stack != null) {
                 PersistentDataContainer pdc = stack.getItemMeta().getPersistentDataContainer();
-                if (pdc.get(ID_KEY, PersistentDataType.STRING) != null && PaperItemManager.getItemById(pdc.get(UUID_KEY, PersistentDataType.STRING)) != null) {
-                    PaperItemManager.getItemById(pdc.get(UUID_KEY, PersistentDataType.STRING)).remove();
+                if (pdc.get(ID_KEY, PersistentDataType.STRING) != null && PaperItemManager.getItem(pdc.get(UUID_KEY, PersistentDataType.STRING)) != null) {
+                    PaperItemManager.getItem(pdc.get(UUID_KEY, PersistentDataType.STRING)).remove();
                 }
             }
         }
@@ -70,7 +70,7 @@ public class PaperItemMgrHelper implements Listener {
         for (ItemStack stack : inv) {
             if (stack != null) {
                 PersistentDataContainer pdc = stack.getItemMeta().getPersistentDataContainer();
-                if (pdc.get(ID_KEY, PersistentDataType.STRING) != null && PaperItemManager.getItemById(pdc.get(UUID_KEY, PersistentDataType.STRING)) != null) {
+                if (pdc.get(ID_KEY, PersistentDataType.STRING) != null && PaperItemManager.getItem(pdc.get(UUID_KEY, PersistentDataType.STRING)) != null) {
                     PaperItemManager.loadItem(stack);
                 }
             }
